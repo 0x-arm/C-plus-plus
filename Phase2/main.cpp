@@ -82,12 +82,12 @@ void exec(const std::string& program_path) {
 
 	std::ifstream file(program_path); // Ouverture du fichier 'program_path'
 
-        std::string instr; // Initialisation de la variable 'instr' de type chaine de caractères
+    std::string instr; // Initialisation de la variable 'instr' de type chaine de caractères
 
 	// Lecture du fichier tant que le fichier possède des lignes (lecture ligne par ligne)
         while(getline(file, instr)) {
 
-		if (!skip) {
+		if (not skip) {
 
 			std::string opcode = parse_opcode(instr); // Affecter la valeur résultante de la lecture de l'opcode dans instr à la variable 'opcode'
 
@@ -96,7 +96,7 @@ void exec(const std::string& program_path) {
 			get_instr(opcode, operand); // Exécuter l'instruction instr au complet en fonction de l'opcode et l'opérande fournies
 		}
 
-		else{
+		else {
 			skip = false;
 		}
 
