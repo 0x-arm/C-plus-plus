@@ -4,11 +4,11 @@
 
 uint16_t registre = 0; // initialisation du registre
 bool skip = false; // variable  nécessaire à l'instruction 'IFNZ'
-constexpr int MAX_UPPER_LIMIT = 65535;
+// constexpr int MAX_UPPER_LIMIT = 65535;
 
 // Retourne la valeur non signée et saturée de 16 bits d'un nombre entier
 uint16_t saturated(int n) {
-        uint16_t value = std::min(std::max(n, 0), MAX_UPPER_LIMIT); // Implémentation donnée dans le document PDF
+        uint16_t value = std::min(std::max(n, 0), 65535); // Implémentation donnée dans le document PDF
 	return value;
 }
 
