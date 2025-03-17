@@ -96,7 +96,10 @@ void exec(const std::string& program_path) {
 			get_instr(opcode, operand); // Exécuter l'instruction instr au complet en fonction de l'opcode et l'opérande fournies
 		}
 
-		skip = false;
+		else{
+			skip = false;
+		}
+
 	};
 
         file.close(); // Fermeture du fichier
