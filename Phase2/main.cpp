@@ -27,6 +27,7 @@ std::string parse_string(std::string instr, bool is_opcode = true) {
 	if(is_opcode) {
 		element = instr.substr(0, i);
 	}
+	
 	else {
 		element = instr.substr(i, s);
 	}
