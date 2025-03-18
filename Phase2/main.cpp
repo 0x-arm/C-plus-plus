@@ -1,86 +1,79 @@
 #include <iostream> // module standard de C++
 #include <fstream> // module pour la gestion de fichiers
 #include <cmath> // module pour les fonctions mathématiques ( dans ce code : std::min()  et std::max() )
-
-uint16_t registre = 0; // initialisation du registre
-bool skip = false; // variable  nécessaire à l'instruction 'IFNZ'
+#include <vector> // module pour les vecteurs
+#include <tuple> // module pour les tuples
 
 uint16_t saturated(int n) {
 
-    constexpr int MAX_UPPER_LIMIT = 65535;
-
+    constexpr int MAX_UPPER_LIMIT = 65535; // Valeur maximale du registre
     uint16_t value = std::min(std::max(n, 0), MAX_UPPER_LIMIT);
 	
 	return value;
 
 }
 
-std::string parse_string(std::string instr, bool is_opcode = true) {
+// Retourne les mots de l'instruction sous forme d'un vecteur
+std::vector<std::string> parse_instr(const std::string& instr) {
 
-	std::string element;
-	int i = 0, s = instr.size();
+    std::vector<std::string> elements;
+    std::string value;
+    int i = 0, s = instr.size();
 
-	while(i < s &&  instr[i] != ' ') {
+    while (i <= s) {
+        if (instr[i] == ' ' || instr[i] == '\0') {
+            if (!value.empty()) {
+                elements.push_back(value);
+                value = "";
+            }
+        } 
+        else {
+            value += instr[i];
+        }
+
 		i++;
 	}
 
-	if(is_opcode) {
-		element = instr.substr(0, i);
-	}
-	
-	else {
-		element = instr.substr(i, s);
-	}
-
-	return element;
+    return elements;
 }
 
 // Retourne l'instruction sans les opérandes
 std::string parse_opcode(const std::string& instr) {
 
-	std::string opcode = parse_string(instr);
+	std::vector<std::string> elements = parse_instr(instr);
+	std::string opcode = elements.at(0);
+
 	return opcode;
 }
 
-// Retourne l'opérande (paramètre) sous forme numérique
-uint16_t parse_operand(const std::string& instr) {
+// Retourne les opérandes (paramètres) sous forme de tuple de strings
+std::tuple<std::string, std::string> parse_operands(const std::string& instr) {
+    std::vector<std::string> elements = parse_instr(instr);
+	int s = elements.size();
 
-	std::string params = parse_string(instr, false);
-	uint16_t operand;
-
-	if (!params.empty()) {
-
-		operand = static_cast<uint16_t>(std::stoi(params));
+	for (int i = 0; i < elements.size(); i++) {
+		std::cout << elements.at(i) << std::endl;
 	}
 
-	return operand;
+    std::string operand1;
+    std::string operand2;
 
-}
+	if (s > 1) {
+        operand1 = elements.at(1);
+    }
 
-// Exécute l'opcode correspondant avec l'opérande associée et retourne 'skip' pour connaître l'état de la ligne suivante
-bool get_instr(std::string instr, uint16_t operand) {
+    if (s > 2) {
+        operand2 = elements.at(2);
+    }
 
-	if (instr == "IFNZ" && registre == 0) {
-        skip = true;
-}
-	else if (instr == "SET") {
-		registre = operand;
-	}
-	else if (instr == "ADD") {
-		registre = saturated(registre + operand);
-	}
-	else if (instr == "SUB") {
-		registre = saturated(registre - operand);
-	}
-	else if (instr == "PRINT") {
-		std::cout << registre << std::endl;
-	}
-
-	return skip;
+    return {operand1, operand2};
 }
 
 // Exécute le programme dans le fichier texte' program_path'
 void exec(const std::string& program_path) {
+
+	static uint16_t registre = 0; // initialisation du registre
+	static bool skip = false; // variable  nécessaire à l'instruction 'IFNZ'
 
 	std::ifstream file(program_path);
 
@@ -92,10 +85,25 @@ void exec(const std::string& program_path) {
 		if (!skip) {
 
 			std::string opcode = parse_opcode(instr);
+			std::tuple<std::string, std::string> operand = parse_operands(instr);
+			std::cout << opcode << " " << std::get<0>(operand) << " " << std::get<1>(operand) << std::endl;
 
-			uint16_t operand = parse_operand(instr);
-
-			get_instr(opcode, operand);
+			// Exécute l'opcode correspondant avec l'opérande associée et retourne 'skip' pour connaître l'état de la ligne suivante
+			// if (instr == "IFNZ" && registre == 0) {
+			// 	skip = true;
+			// }
+			// else if (instr == "SET") {
+			// 	registre = operand;
+			// }
+			// else if (instr == "ADD") {
+			// 	registre = saturated(registre + operand);
+			// }
+			// else if (instr == "SUB") {
+			// 	registre = saturated(registre - operand);
+			// }
+			// else if (instr == "PRINT") {
+			// 	std::cout << registre << std::endl;
+			// }
 		}
 
 		skip = false;
