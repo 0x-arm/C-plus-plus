@@ -2,6 +2,7 @@ SET a 150
 SET b 130
 PUSH a
 ADD a b
+PRINT a
 PUSH a
 STORE 100 a
 STORE 101 b

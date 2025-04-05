@@ -40,16 +40,7 @@ uint16_t pop() {
     if (SP < 2) {
         std::exit(1); 
     }
-
-    int top_stack;
-
-    for (int i = 0; i < 16; i++) {
-        if (memory[i] != 0) {
-            top_stack = memory[i]; // Réinitialise la mémoire
-            std::cout << top_stack << "Indice " << i << std::endl; // Affiche la valeur retirée de la pile
-        }
-    }
-
+    
     SP -= 2;
     return memory[SP] | (memory[SP + 1] << 8);
 }
