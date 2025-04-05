@@ -3,6 +3,9 @@
 #include <cmath> // module pour les fonctions mathématiques ( dans ce code : std::min()  et std::max() )
 #include <vector> // module pour les vecteurs
 #include <tuple> // module pour les tuples
+#include <cctype>
+#include <unordered_map>
+#include "memory.hpp" // module pour la gestion de la mémoire
 
 uint16_t saturated(int n) {
 
@@ -51,67 +54,129 @@ std::tuple<std::string, std::string> parse_operands(const std::string& instr) {
     std::vector<std::string> elements = parse_instr(instr);
 	int s = elements.size();
 
-	for (int i = 0; i < elements.size(); i++) {
-		std::cout << elements.at(i) << std::endl;
-	}
-
-    std::string operand1;
-    std::string operand2;
+    static std::string first_operand;
+    static std::string second_operand;
 
 	if (s > 1) {
-        operand1 = elements.at(1);
+        first_operand = elements.at(1);
+		
+		if (s > 2) {
+			second_operand = elements.at(2);
+		}
     }
+	
+    return {first_operand, second_operand};
+}
 
-    if (s > 2) {
-        operand2 = elements.at(2);
-    }
+// Exécute l'instruction
+void exec_instr(const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, bool& skip) {
 
-    return {operand1, operand2};
+	if (opcode == "IFNZ") {
+		if (registers[first_operand] == 0) {
+			skip = true;
+		}
+	}
+
+	else if (opcode == "SET") {
+		if (std::isdigit(second_operand[0])) {
+			registers[first_operand] = std::stoi(second_operand);
+		}
+		else {
+			registers[first_operand] = registers[second_operand];
+		}
+	}
+
+	else if (opcode == "ADD") {
+		if (std::isdigit(second_operand[0])) {
+			registers[first_operand] = saturated(registers[first_operand] + std::stoi(second_operand));
+		}
+		else {
+			registers[first_operand] = saturated(registers[first_operand] + registers[second_operand]);
+		}
+	}
+
+	else if (opcode == "SUB") {
+		if (std::isdigit(second_operand[0])) {
+			registers[first_operand] = saturated(registers[first_operand] - std::stoi(second_operand));
+		}
+		else {
+			registers[first_operand] = saturated(registers[first_operand] - registers[second_operand]);
+		}
+	}
+
+	else if (opcode == "PRINT") {
+		std::cout << registers[first_operand] << std::endl;
+	}
+
+	else if (opcode == "STORE") {
+		if (std::isdigit(first_operand[0])) {
+			uint8_t first_operand = first_operand;
+			write(first_operand, registers[second_operand]);
+		}
+	}
+
+	else if (opcode == "LOAD") {
+		if (std::isdigit(first_operand[0])) {
+			uint8_t first_operand = first_operand;
+			uint16_t data = read(first_operand);
+			registers[second_operand] = data;
+		}
+	}
+
+	else if (opcode == "PUSH") {
+		if (std::isdigit(first_operand[0])) {
+			uint16_t first_operand = first_operand;
+			push(first_operand);
+		}
+	}
+
+	else if (opcode == "POP") {
+		if (std::isalpha(first_operand[0])) {
+			uint16_t data = pop();
+			registers[first_operand] = data;
+		}
+	}
+
 }
 
 // Exécute le programme dans le fichier texte' program_path'
 void exec(const std::string& program_path) {
 
-	static uint16_t registre = 0; // initialisation du registre
-	static bool skip = false; // variable  nécessaire à l'instruction 'IFNZ'
+	static std::unordered_map<std::string, int> registers = {
+		{"a", 0},
+		{"b", 0},
+		{"c", 0},
+		{"d", 0}
+	}; // initialisation du registre
 
-	std::ifstream file(program_path);
+	static bool skip = false; // variable nécessaire à l'instruction 'IFNZ'
 
-        std::string instr;
+	static std::ifstream file(program_path);
 
-	// Lecture du fichier tant que le fichier possède des lignes (lecture ligne par ligne)
-        while(getline(file, instr)) {
+    std::string instr;
+
+    while (getline(file, instr)) {
 
 		if (!skip) {
 
 			std::string opcode = parse_opcode(instr);
 			std::tuple<std::string, std::string> operand = parse_operands(instr);
-			std::cout << opcode << " " << std::get<0>(operand) << " " << std::get<1>(operand) << std::endl;
 
-			// Exécute l'opcode correspondant avec l'opérande associée et retourne 'skip' pour connaître l'état de la ligne suivante
-			// if (instr == "IFNZ" && registre == 0) {
-			// 	skip = true;
-			// }
-			// else if (instr == "SET") {
-			// 	registre = operand;
-			// }
-			// else if (instr == "ADD") {
-			// 	registre = saturated(registre + operand);
-			// }
-			// else if (instr == "SUB") {
-			// 	registre = saturated(registre - operand);
-			// }
-			// else if (instr == "PRINT") {
-			// 	std::cout << registre << std::endl;
-			// }
+			std::string first_operand = std::get<0>(operand);
+			std::string second_operand = std::get<1>(operand);
+
+			exec_instr(opcode, first_operand, second_operand, registers, skip); // exécution de l'instruction
+
 		}
 
-		skip = false;
+		else {
+			skip = false; // réinitialisation de la variable 'skip' pour la prochaine instruction
+		};
+
 	};
 
-        file.close();
-
-};
+	file.close();
+}
 
 // Fonction Main
 int main() {
