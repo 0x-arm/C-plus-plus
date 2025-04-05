@@ -34,13 +34,13 @@ void push(uint16_t value) {
     SP += 2;
 }
 
-// Retire une valeur 16 bits du sommet de la pile et la retourne
+// Retire une valeur 16 bits du sommet de la pile et la retourne 
 uint16_t pop() {
     // Vérifie si la pile est vide
     if (SP < 2) {
         std::exit(1); 
     }
-    
+
     SP -= 2;
     return memory[SP] | (memory[SP + 1] << 8);
 }
