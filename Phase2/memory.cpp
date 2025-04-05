@@ -25,7 +25,7 @@ void write(uint8_t address, uint16_t value) {
 void push(uint16_t value) {
     
     // Vérifie si la pile déborde (au-delà de l’adresse 15)
-    if (SP + 1 >= 16) {
+    if (SP + 1 > 16) {
         std::exit(1);
     }
 
