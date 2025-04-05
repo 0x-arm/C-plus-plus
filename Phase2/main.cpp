@@ -84,6 +84,8 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 		else {
 			registers[first_operand] = registers[second_operand];
 		}
+
+		std::cout << "Fait" << std::endl;
 	}
 
 	else if (opcode == "ADD") {
