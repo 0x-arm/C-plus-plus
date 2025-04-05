@@ -18,7 +18,9 @@ uint16_t read(uint8_t address) {
 // Fonction d’écriture (write) : écrit 2 octets consécutifs (16 bits) en little endian
 void write(uint8_t address, uint16_t value) {
     memory[address] = value & 0xFF;           // Octet de poids faible
-    memory[address + 1] = (value >> 8);       // Octet de poids fort
+    memory[address + 1] = (value >> 8);
+    
+    std::cout << memory[address] << " " << memory[address + 1] << std::endl;  // Octet de poids fort
 }
 
 // Ajoute une valeur 16 bits au sommet de la pile
