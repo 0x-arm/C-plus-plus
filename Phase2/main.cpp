@@ -127,7 +127,7 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 
 	else if (opcode == "PUSH") {
 		if (std::isalpha(first_operand[0])) {
-			uint8_t value = registers[first_operand];
+			uint16_t value = registers[first_operand];
 			push(value);
 		}
 	}
