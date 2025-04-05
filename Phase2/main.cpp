@@ -79,10 +79,10 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 
 	else if (opcode == "SET") {
 		if (std::isdigit(second_operand[0])) {
-			registers[first_operand] = saturated(std::stoi(second_operand));
+			registers[first_operand] = std::stoi(second_operand);
 		}
 		else {
-			registers[first_operand] = saturated(registers[second_operand]);
+			registers[first_operand] = registers[second_operand];
 		}
 	}
 
