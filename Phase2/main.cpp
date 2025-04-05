@@ -125,8 +125,8 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 
 	else if (opcode == "PUSH") {
 		if (std::isdigit(first_operand[0])) {
-			uint16_t first_operand = first_operand;
-			push(first_operand);
+			uint8_t address = std::stoi(first_operand);
+			push(address);
 		}
 	}
 

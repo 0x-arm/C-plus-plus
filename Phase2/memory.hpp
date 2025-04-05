@@ -1,8 +1,6 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
-#include <cstdint>
-
 extern uint8_t memory[256];
 
 uint16_t read(uint8_t address);
