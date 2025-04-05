@@ -1,5 +1,3 @@
-// memory.cpp
-
 #include <iostream> // Pour std::cout
 #include <cstdlib> // Pour std::exit
 #include "memory.hpp"
