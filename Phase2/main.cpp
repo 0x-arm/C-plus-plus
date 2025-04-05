@@ -93,6 +93,8 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 		else {
 			registers[first_operand] = saturated(registers[first_operand] + registers[second_operand]);
 		}
+
+		std::cout << registers[first_operand] << std::endl; // Affiche la valeur du registre après l'addition
 	}
 
 	else if (opcode == "SUB") {
