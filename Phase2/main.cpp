@@ -118,7 +118,7 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 	else if (opcode == "LOAD") {
 		if (std::isdigit(first_operand[0])) {
 			uint8_t address = std::stoi(first_operand);
-			uint16_t data = read(address);
+			uint16_t data = saturated(read(address));
 			registers[second_operand] = data;
 		}
 	}
