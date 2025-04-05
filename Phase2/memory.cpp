@@ -19,9 +19,6 @@ uint16_t read(uint8_t address) {
 void write(uint8_t address, uint16_t value) {
     memory[address] = value & 0xFF;           // Octet de poids faible
     memory[address + 1] = (value >> 8);
-    
-    std::cout << std::hex << std::uppercase << (int)memory[address] << std::endl;  // Octet de poids fort
-    std::cout << std::hex << std::uppercase << (int)memory[address + 1] << std::endl;  // Octet de poids fort
 }
 
 // Ajoute une valeur 16 bits au sommet de la pile
