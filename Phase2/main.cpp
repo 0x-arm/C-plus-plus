@@ -110,15 +110,15 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 
 	else if (opcode == "STORE") {
 		if (std::isdigit(first_operand[0])) {
-			uint8_t first_operand = first_operand;
-			write(first_operand, registers[second_operand]);
+			uint8_t address = std::stoi(first_operand);
+			write(address, registers[second_operand]);
 		}
 	}
 
 	else if (opcode == "LOAD") {
 		if (std::isdigit(first_operand[0])) {
-			uint8_t first_operand = first_operand;
-			uint16_t data = read(first_operand);
+			uint8_t address = std::stoi(first_operand);
+			uint16_t data = read(address);
 			registers[second_operand] = data;
 		}
 	}

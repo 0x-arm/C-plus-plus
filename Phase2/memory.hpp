@@ -1,6 +1,5 @@
-// memory.h
-#ifndef MEMORY_H
-#define MEMORY_H
+#ifndef MEMORY_HPP
+#define MEMORY_HPP
 
 #include <cstdint>
 
