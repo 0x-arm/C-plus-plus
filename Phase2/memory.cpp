@@ -42,5 +42,5 @@ uint16_t pop() {
     }
 
     SP -= 2;
-    return memory[SP] | (memory[SP + 1] >> 8);
+    return memory[SP] | (memory[SP + 1] << 8);
 }

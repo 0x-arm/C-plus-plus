@@ -133,6 +133,7 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 	else if (opcode == "POP") {
 		if (std::isalpha(first_operand[0])) {
 			uint16_t data = pop();
+			std::cout << data << std::endl;
 			registers[first_operand] = data;
 		}
 	}
