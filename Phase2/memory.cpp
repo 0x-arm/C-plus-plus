@@ -13,7 +13,7 @@ uint8_t SP = 0;
 // Fonction de lecture (read) : lit 2 octets consécutifs (16 bits) en little endian
 uint16_t read(uint8_t address) {
     constexpr int MAX_MEMORY = 256; // Taille de la mémoire
-    return std::min(std::max((memory[address] | (memory[address + 1] << 8)), 0), MAX_MEMORY);
+    return std::min(std::max((memory[address] | (memory[address + 1] << 8)), 0), MAX_MEMORY); // seulement memory[address] | (memory[address + 1] << 8) ==> 33304 car non-borné
 }
 
 // Fonction d’écriture (write) : écrit 2 octets consécutifs (16 bits) en little endian
