@@ -15,4 +15,5 @@ PRINT b
 LOAD 101 a
 PRINT a
 SUB b b
+IFNZ 0
 PRINT b
