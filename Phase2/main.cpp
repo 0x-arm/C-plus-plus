@@ -114,7 +114,7 @@ std::tuple<std::string, std::string> parse_operands(const std::string& instr) {
 
 
 //// Exécute l'instruction
-void exec_instr(const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, bool& skip) {
+void basic_instr(const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, bool& skip, Memory& memory) {
 
 	// Si l'opcode est IFNZ
 	if (opcode == "IFNZ") {
@@ -126,7 +126,6 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 			skip = true;
 		}
 	}
-
 
 	// Si l'opcode est SET
 	else if (opcode == "SET") {
@@ -189,8 +188,13 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 		std::cout << registers[first_operand] << std::endl;
 	}
 
+}
+
+
+void memory_instr (const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, bool& skip, Memory& memory) {
+	
 	// Si l'opcode est STORE
-	else if (opcode == "STORE") {
+	if (opcode == "STORE") {
 
 		// Si le premier opérande est une valeur
 		if (std::isdigit(first_operand[0])) {
@@ -199,7 +203,7 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 			uint8_t address = std::stoi(first_operand);
 
 			// Ecriture de la valeur dans l'adresse mémoire
-			write(address, registers[second_operand]);
+			memory.write(address, registers[second_operand]);
 		}
 	}
 
@@ -213,7 +217,7 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 			uint8_t address = std::stoi(first_operand);
 
 			// Lire la valeur de l'adresse mémoire et récupérer cette valeur
-			uint16_t data = read(address);
+			uint16_t data = memory.read(address);
 
 			// Stocker la valeur dans le registre
 			registers[second_operand] = data;
@@ -230,7 +234,7 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 			uint16_t value = registers[first_operand];
 
 			// Push la valeur sur la pile
-			push(value);
+			memory.push(value);
 		}
 	}
 
@@ -240,13 +244,12 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 		// Si le premier opérande est un charactère
 		if (std::isalpha(first_operand[0])) {
 			// Pop la valeur de la pile et récupérer cette valeur
-			uint16_t data = pop();
+			uint16_t data = memory.pop();
 
 			// Stocker la valeur dans le registre
 			registers[first_operand] = data;
 		}
 	}
-
 }
 
 
@@ -254,7 +257,7 @@ void exec_instr(const std::string& opcode, const std::string& first_operand, con
 void exec(const std::string& program_path) {
 
 	// Initialisation des registres (a, b, c, d) à 0
-	static std::unordered_map<std::string, int> registers = {
+	std::unordered_map<std::string, int> registers = {
 		{"a", 0},
 		{"b", 0},
 		{"c", 0},
@@ -262,13 +265,15 @@ void exec(const std::string& program_path) {
 	};
 
 	// Initialisation de la variable 'skip' à false (pour sauter l'instruction suivante si nécessaire)
-	static bool skip = false;
+	bool skip = false;
 
 	// Ouverture du fichier contenant le programme
-	static std::ifstream file(program_path);
+	std::ifstream file(program_path);
 
 	// Définition de la variable pour stocker l'instruction lue
     std::string instr;
+
+	Memory memory;
 
 	// Parcourir le fichier ligne par ligne
     while (getline(file, instr)) {
@@ -281,14 +286,21 @@ void exec(const std::string& program_path) {
 			std::string opcode = parse_opcode(instr);
 
 			// Récupération des opérandes
-			std::tuple<std::string, std::string> operand = parse_operands(instr);
+			std::tuple<std::string, std::string> operands = parse_operands(instr);
 
-			// Récupération séparée des opérandes
-			std::string first_operand = std::get<0>(operand);
-			std::string second_operand = std::get<1>(operand);
+			std::string first_operand = std::get<0>(operands);
+			std::string second_operand = std::get<1>(operands);
 
 			// Exécuter l'instruction
-			exec_instr(opcode, first_operand, second_operand, registers, skip); // exécution de l'instruction
+			// Si l'instruction est une instruction mémoire (STORE, LOAD, PUSH, POP)
+			if (opcode == "STORE" || opcode == "LOAD" || opcode == "PUSH" || opcode == "POP") {
+				// Exécuter l'instruction mémoire
+				memory_instr(opcode, first_operand, second_operand, registers, skip, memory);
+			} 
+			else {
+				// Exécuter l'instruction basique
+				basic_instr(opcode, first_operand, second_operand, registers, skip, memory);
+			}
 
 		}
 
