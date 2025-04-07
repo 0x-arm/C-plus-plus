@@ -1,5 +1,6 @@
-#include "Memory.hpp"
+#include <iostream>
 #include <cstdlib>
+#include "Memory.hpp"
 
 // Constructeur : initialise la mémoire et le pointeur de pile
 Memory::Memory() {
@@ -8,24 +9,62 @@ Memory::Memory() {
     }
 }
 
+//// Méthode de lecture (read) : lit 2 octets consécutifs (16 bits) en little endian
 uint16_t Memory::read(uint8_t address) {
-    return _memory[address] | (_memory[address + 1] << 8);
+    
+    // Taille de la mémoire
+    constexpr int MAX_MEMORY = 256;
+
+    uint16_t value = std::min(std::max((_memory[address] | (_memory[address + 1] << 8)), 0), MAX_MEMORY); // Initialiser la valeur à 0
+
+    // Retourner la valeur lue saturée à l'adresse mémoire spécifiée (octet de poids faible + octet de poids fort)
+    return value; // seulement memory[address] | (memory[address + 1] << 8) ==> 33304 car non-borné
 }
 
+//// Méthode d’écriture (write) : écrit 2 octets consécutifs (16 bits) en little endian
 void Memory::write(uint8_t address, uint16_t value) {
+
+    // Octet de poids faible
     _memory[address] = value & 0xFF;
-    _memory[address + 1] = value >> 8;
+
+    // Octet de poids fort
+    _memory[address + 1] = (value >> 8);
 }
 
+//// Méthode qui ajoute une valeur 16 bits au sommet de la pile
 void Memory::push(uint16_t value) {
-    if (_SP + 1 >= 16) std::exit(1);
+    
+    // Vérifier si la pile déborde (au-delà de l’adresse 15)
+    if (_SP + 1 >= 16) {
+
+        // Quitter le programme
+        std::exit(1);
+    }
+
+    // Récupérer l'octet de poids faible
     _memory[_SP] = value & 0xFF;
-    _memory[_SP + 1] = value >> 8;
+
+    // Récupérer l'octet de poids fort
+    _memory[_SP + 1] = (value >> 8);
+
+    // Incrémenter le pointeur de pile
     _SP += 2;
 }
 
+//// Méthode qui retire une valeur 16 bits du sommet de la pile et la retourne 
 uint16_t Memory::pop() {
-    if (_SP < 2) std::exit(1);
+
+    // Vérifier si la pile est vide
+    if (_SP < 2) {
+
+        // Quitter le programme
+        std::exit(1); 
+    }
+
+    // Décrémenter le pointeur de pile
     _SP -= 2;
+
+    // Retourner la valeur lue de la pile (octet de poids faible + octet de poids fort)
     return _memory[_SP] | (_memory[_SP + 1] << 8);
+
 }
