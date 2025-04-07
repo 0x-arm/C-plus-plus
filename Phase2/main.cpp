@@ -7,12 +7,11 @@
 #include <unordered_map> // module pour le dictionnaire des registres (dans ce code : std::unordered_map<std::string, int>)
 #include "memory.hpp" // module pour la gestion de la mémoire (importation de la mémoire dans le fichier 'memory.hpp')
 
+// Valeur maximale du registre
+constexpr int MAX_UPPER_LIMIT = 65535;
 
 //// Retourne la valeur saturée d'un entier
 uint16_t saturated(int n) {
-
-	// Valeur maximale du registre
-    constexpr int MAX_UPPER_LIMIT = 65535;
 
 	// Saturation de la valeur
     uint16_t value = std::min(std::max(n, 0), MAX_UPPER_LIMIT); 
