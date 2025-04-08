@@ -2,15 +2,6 @@
 #include <cstdlib>
 #include "Memory.hpp"
 
-// Taille de la mémoire
-constexpr int MAX_MEMORY = 256;
-
-// Taille de la pile
-constexpr int MAX_STACK = 16;
-
-// Taille d'un octet (8 bits)
-constexpr int OCTES_SIZE = 8;
-
 // Constructeur : initialise la mémoire et le pointeur de pile
 Memory::Memory() {
     for (int i = 0; i < MAX_MEMORY; ++i) {
@@ -22,7 +13,7 @@ Memory::Memory() {
 uint16_t Memory::read(uint8_t address) {
 
     // Récupération de la valeur saturée à l'adresse mémoire spécifiée (octet de poids faible + octet de poids fort)
-    uint16_t value = std::min(std::max((_memory[address] | (_memory[address + 1] << OCTES_SIZE)), 0), MAX_MEMORY);
+    uint16_t value = std::min(std::max((_memory[address] | (_memory[address + 1] << OCTET_SIZE)), 0), MAX_MEMORY);
 
     // Retourner la valeur lue saturée
     return value; // seulement memory[address] | (memory[address + 1] << 8) ==> résultat = 33304 car value = non borné/saturée
@@ -35,7 +26,7 @@ void Memory::write(uint8_t address, uint16_t value) {
     _memory[address] = static_cast<uint8_t>(value);
 
     // Récupérer l'octet de poids faible sur 8 bits
-    _memory[address + 1] = static_cast<uint8_t>(value >> OCTES_SIZE);
+    _memory[address + 1] = static_cast<uint8_t>(value >> OCTET_SIZE);
 
 }
 
@@ -53,7 +44,7 @@ void Memory::push(uint16_t value) {
     _memory[_SP] = static_cast<uint8_t>(value);
 
     // Récupérer l'octet de poids fort
-    _memory[_SP + 1] = static_cast<uint8_t>(value >> OCTES_SIZE);
+    _memory[_SP + 1] = static_cast<uint8_t>(value >> OCTET_SIZE);
 
     // Incrémenter le pointeur de pile
     _SP += 2;
@@ -73,6 +64,6 @@ uint16_t Memory::pop() {
     _SP -= 2;
 
     // Retourner la valeur lue de la pile (octet de poids faible + octet de poids fort)
-    return _memory[_SP] | (_memory[_SP + 1] << OCTES_SIZE);
+    return _memory[_SP] | (_memory[_SP + 1] << OCTET_SIZE);
 
 }
