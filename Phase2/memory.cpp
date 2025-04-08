@@ -15,9 +15,10 @@ uint16_t Memory::read(uint8_t address) {
     // Taille de la mémoire
     constexpr int MAX_MEMORY = 256;
 
-    uint16_t value = std::min(std::max((_memory[address] | (_memory[address + 1] << 8)), 0), MAX_MEMORY); // Initialiser la valeur à 0
+    // Récupération de la valeur saturée à l'adresse mémoire spécifiée (octet de poids faible + octet de poids fort)
+    uint16_t value = std::min(std::max((_memory[address] | (_memory[address + 1] << 8)), 0), MAX_MEMORY);
 
-    // Retourner la valeur lue saturée à l'adresse mémoire spécifiée (octet de poids faible + octet de poids fort)
+    // Retourner la valeur lue saturée
     return value; // seulement memory[address] | (memory[address + 1] << 8) ==> 33304 car non-borné
 }
 
