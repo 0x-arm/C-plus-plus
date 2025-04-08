@@ -19,7 +19,7 @@ uint16_t Memory::read(uint8_t address) {
     uint16_t value = std::min(std::max((_memory[address] | (_memory[address + 1] << 8)), 0), MAX_MEMORY);
 
     // Retourner la valeur lue saturée
-    return value; // seulement memory[address] | (memory[address + 1] << 8) ==> 33304 car non-borné
+    return value; // seulement memory[address] | (memory[address + 1] << 8) ==> 33304 car non borné/saturée
 }
 
 //// Méthode d’écriture (write) : écrit 2 octets consécutifs (16 bits) en little endian
