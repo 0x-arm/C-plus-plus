@@ -113,7 +113,7 @@ std::tuple<std::string, std::string> parse_operands(const std::string& instr) {
 
 
 //// Exécute les instructions de bases
-void basic_instr(const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, bool& skip, Memory& memory) {
+void basic_instr(const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, bool& skip) {
 
 	// Si l'opcode est IFNZ
 	if (opcode == "IFNZ") {
@@ -190,7 +190,7 @@ void basic_instr(const std::string& opcode, const std::string& first_operand, co
 }
 
 // Exécute les instructions liées à la mémoire
-void memory_instr (const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, bool& skip, Memory& memory) {
+void memory_instr (const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, Memory& memory) {
 	
 	// Si l'opcode est STORE
 	if (opcode == "STORE") {
@@ -294,11 +294,11 @@ void exec(const std::string& program_path) {
 			// Si l'instruction est une instruction mémoire (STORE, LOAD, PUSH, POP)
 			if (opcode == "STORE" || opcode == "LOAD" || opcode == "PUSH" || opcode == "POP") {
 				// Exécuter l'instruction mémoire
-				memory_instr(opcode, first_operand, second_operand, registers, skip, memory);
+				memory_instr(opcode, first_operand, second_operand, registers, memory);
 			} 
 			else {
 				// Exécuter l'instruction basique
-				basic_instr(opcode, first_operand, second_operand, registers, skip, memory);
+				basic_instr(opcode, first_operand, second_operand, registers, skip);
 			}
 
 		}
