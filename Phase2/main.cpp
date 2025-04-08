@@ -112,7 +112,7 @@ std::tuple<std::string, std::string> parse_operands(const std::string& instr) {
 }
 
 
-//// Exécute l'instruction
+//// Exécute les instructions de bases
 void basic_instr(const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, bool& skip, Memory& memory) {
 
 	// Si l'opcode est IFNZ
@@ -189,7 +189,7 @@ void basic_instr(const std::string& opcode, const std::string& first_operand, co
 
 }
 
-
+// Exécute les instructions liées à la mémoire
 void memory_instr (const std::string& opcode, const std::string& first_operand, const std::string& second_operand, std::unordered_map<std::string, int>& registers, bool& skip, Memory& memory) {
 	
 	// Si l'opcode est STORE
