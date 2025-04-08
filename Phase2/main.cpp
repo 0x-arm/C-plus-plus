@@ -66,10 +66,7 @@ std::vector<std::string> parse_instr(const std::string& instr) {
 
 
 //// Retourne l'instruction sans les opérandes
-std::string parse_opcode(const std::string& instr) {
-
-	// Récupérer les mots de l'instruction grâce à la fonction 'parse_instr'
-	std::vector<std::string> elements = parse_instr(instr);
+std::string parse_opcode(const std::vector<std::string>& elements) {
 
 	// Le premier mot de du vecteur est l'opcode
 	std::string opcode = elements.at(0);
@@ -80,14 +77,10 @@ std::string parse_opcode(const std::string& instr) {
 
 
 //// Retourne les opérandes (paramètres) sous forme de tuple de strings
-std::tuple<std::string, std::string> parse_operands(const std::string& instr) {
-
-	// Récupérer les mots de l'instruction grâce à la fonction 'parse_instr'
-    std::vector<std::string> elements = parse_instr(instr);
+std::tuple<std::string, std::string> parse_operands(const std::vector<std::string>& elements) {
 
 	// Récuperer le nombre d'éléments dans le vecteur
 	int s = elements.size();
-
 
 	// Définitions des variables pour stocker les opérandes
     static std::string first_operand;
@@ -281,11 +274,14 @@ void exec(const std::string& program_path) {
 		// Si l'instruction ne doit pas être passée (skip = false)
 		if (!skip) {
 
+			// Récupérer les éléments de l'instruction
+			std::vector<std::string> elements = parse_instr(instr);
+
 			// Récupération de l'opcode
-			std::string opcode = parse_opcode(instr);
+			std::string opcode = parse_opcode(elements);
 
 			// Récupération des opérandes
-			std::tuple<std::string, std::string> operands = parse_operands(instr);
+			std::tuple<std::string, std::string> operands = parse_operands(elements);
 
 			std::string first_operand = std::get<0>(operands);
 			std::string second_operand = std::get<1>(operands);
