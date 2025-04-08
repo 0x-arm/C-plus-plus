@@ -31,10 +31,10 @@ uint16_t Memory::read(uint8_t address) {
 //// Méthode qui écrit une valeur sur 16 bits dans la mémoire en little endian
 void Memory::write(uint8_t address, uint16_t value) {
 
-    // // Récupérer l'octet de poids faible
+    // Récupérer l'octet de poids faible sur 8 bits
     _memory[address] = static_cast<uint8_t>(value);
 
-    // Récupérer l'octet de poids fort
+    // Récupérer l'octet de poids faible sur 8 bits
     _memory[address + 1] = static_cast<uint8_t>(value >> OCTES_SIZE);
 
 }
