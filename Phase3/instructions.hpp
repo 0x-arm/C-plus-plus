@@ -2,8 +2,25 @@
 #define INSTRUCTIONS_HPP
 
 #include <string>
-#include "operand.hpp"
-#include "opcode.hpp"
+
+enum Opcode { 
+    SETv, 
+    SETr, 
+    ADDv, 
+    ADDr, 
+    SUBv, 
+    SUBr 
+};
+
+enum OperandType {
+    NUMERIC,
+    REGISTER
+};
+
+struct Operand {
+    OperandType type;
+    uint16_t parsed;
+};
 
 struct Instruction {
     const Opcode opcode;

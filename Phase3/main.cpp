@@ -6,8 +6,6 @@
 // #include "memory.hpp" // module pour la gestion de la mémoire (importation de la mémoire dans le fichier 'memory.hpp')
 // #include "register.hpp" // module pour la gestion des registres (importation des registres dans le fichier 'register.hpp')
 #include "instructions.hpp" // module pour la gestion des instructions (importation des instructions dans le fichier 'instructions.hpp')
-#include "opcode.hpp"
-#include "operand.hpp"
 
 // Valeur maximale du registre
 constexpr int MAX_UPPER_LIMIT = 65535;
@@ -100,7 +98,6 @@ void exec(const std::string& program_path) {
 
 		}
 		
-
 		// Si l'instruction l'instruction n'est pas lue (skip = true)
 		else {
 
