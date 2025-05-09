@@ -3,11 +3,6 @@
 
 #include <cstdint>
 
-constexpr int MAX_MEMORY = 256; // Taille de la mémoire
-constexpr int MAX_STACK = 16; // Taille de la pile
-constexpr int OCTET_SIZE = 8; // Taille d'un octet (8 bits)
-
-// Classe Memory
 class Memory {
 private:
     uint8_t _memory[256];
