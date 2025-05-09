@@ -2,12 +2,13 @@
 
 //// Surcharge de l'opérateur [] pour accéder à la mémoire
 uint16_t& Memory::operator[](uint16_t address) {
-    
-    // Retourne une référence vers une valeur 16 bits à l'adresse donnée
-    // Interprète deux octets consécutifs comme une seule valeur uint16_t (little endian)
-    return *reinterpret_cast<uint16_t*>(&MEM[address]);
-}
 
+    // Conversion de l'adresse donnée en un pointeur vers uint16_t pour accéder aux deux octets à cette position.
+    uint16_t* ptr = (uint16_t*)&MEM[address];
+
+    // Retourne le pointeur déréférencé
+    return *ptr;
+}
 
 //// Méthode pop : retire un élément de la pile
 uint16_t Memory::pop() {
