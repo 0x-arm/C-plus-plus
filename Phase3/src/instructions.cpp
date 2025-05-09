@@ -78,18 +78,13 @@ Operand* parse_operand(const std::vector<std::string>& raw, const int index, std
     // Récupérer la taille du vecteur
     int size = raw.size();
 
-    // Vérifier si l’index est hors limites
-    if (index >= size) {
+    // Vérifier si l’index est hors limites ou que l'opérande n'existe pas
+    if (index >= size || raw[index].empty()) {
         return nullptr; // Aucun opérande à cet emplacement
     }
 
     // Récupérer la valeur à l’index donné
     std::string value = raw[index];
-
-    // Si la valeur est vide, retourner nullptr
-    if (value.empty()) {
-        return nullptr;
-    }
 
     // Créer un nouvel opérande
     Operand* operand = new Operand;
@@ -127,9 +122,9 @@ Instruction::Instruction(const std::string& raw)
         {"d", 3}
     };
 
-    // Analyse et stockage du premier opérande (s’il existe)
+    // Analyse et stockage du premier opérande s’il existe
     operands[0] = parse_operand(parse_line(raw), 1, registers_id);
 
-    // Analyse et stockage du second opérande (s’il existe)
+    // Analyse et stockage du second opérande s’il existe
     operands[1] = parse_operand(parse_line(raw), 2, registers_id);
 }

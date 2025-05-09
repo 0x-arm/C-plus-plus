@@ -65,8 +65,8 @@ void exec(const std::string& program_path) {
 				// Si l’opcode est SETv (affectation directe d’une valeur dans un registre)
 				case Opcode::SETv:
 
-					// Vérifier que le premier opérande est un registre
-					if (first_operand->type == OperandType::REGISTER) {
+					// Vérifier que le premier opérande est un registre et le second une valeur
+					if (first_operand->type == OperandType::REGISTER && second_operand->type == OperandType::NUMERIC) {
 
 						// Récupérer l’index du registre et la valeur
 						int reg_index = first_operand->parsed;
@@ -95,8 +95,8 @@ void exec(const std::string& program_path) {
 				// Si l’opcode est ADDv (addition registre + valeur)
 				case Opcode::ADDv:
 
-					// Vérifier que le premier opérande est un registre
-					if (first_operand->type == OperandType::REGISTER) {
+					// Vérifier que le premier opérande est un registre et le second une valeur
+					if (first_operand->type == OperandType::REGISTER && second_operand->type == OperandType::NUMERIC) {
 
 						// Récupérer l’index du registre et la valeur
 						int reg_index = first_operand->parsed;
@@ -185,8 +185,8 @@ void exec(const std::string& program_path) {
 				// Si l’opcode est PUSH
 				case Opcode::PUSH:
 
-					// Vérifier que le premier opérande est un registre
-					if (first_operand->type == OperandType::REGISTER) {
+					// Vérifier qu'il n'y a qu'un seul opérande et que celui-ci est un registre
+					if (first_operand->type == OperandType::REGISTER && second_operand == 0) {
 
 						// Récupérer l’index du registre
 						uint16_t reg_index = first_operand->parsed;
@@ -199,8 +199,8 @@ void exec(const std::string& program_path) {
 				// Si l’opcode est POP
 				case Opcode::POP:
 
-					// Vérifier que le premier opérande est un registre
-					if (first_operand->type == OperandType::REGISTER) {
+					// Vérifier qu'il n'y a qu'un seul opérande et que celui-ci est un registre
+					if (first_operand->type == OperandType::REGISTER && second_operand == 0) {
 
 						// Récupérer l’index du registre
 						uint16_t reg_index = first_operand->parsed;
@@ -213,8 +213,8 @@ void exec(const std::string& program_path) {
 				// Opcode non reconnu
 				default:
 
-					// Afficher un message d’erreur
-					std::cerr << "Opcode non reconnu." << std::endl;
+					// Quitter le programme si aucun Opcode n'est reçu
+					std::exit(1);
 					break;
 			}
 		}

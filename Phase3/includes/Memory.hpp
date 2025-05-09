@@ -6,18 +6,28 @@ class Memory {
 
 private:
         uint8_t* MEM;
-        uint8_t _SP;
+        uint8_t SP;
+        uint32_t SIZE;
 
 public:
 
     // Constructeur de la mémoire
     inline Memory(uint8_t nbits) {
-        MEM = new uint8_t[1 << nbits];
-        _SP = 0;
+
+        // Calcul de la taille de la mémoire à allouer en fonction du nombre de bits (1 << nbits = 2^nbits)
+        SIZE = 1 << nbits;
+
+        // Allocation dynamique d'un tableau de uint8_t de taille 'size'
+        MEM = new uint8_t[SIZE];
+
+        // Initialiser le pointeur à 0
+        SP = 0;
     };
 
-    // Libération de la mémoire allouée
+    // Destructeur de la mémoire
     inline ~Memory() {
+        
+        // Libération de la mémoire allouée pour le tableau MEM
         delete[] MEM;
     };
 
