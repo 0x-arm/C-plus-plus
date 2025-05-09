@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include "Saturated.hpp"
 
 class Register {
 
@@ -10,15 +9,15 @@ private:
 
 public:
         constexpr void operator=(uint16_t value) {
-            data = saturated(value);
+            data = value;
         }
 
         constexpr void operator+=(uint16_t value) {
-            data = saturated(data += value);
+            data += value;
         }
 
         constexpr void operator-=(uint16_t value) {
-            data = saturated(data -= value);
+            data -= value;
         }
 
         constexpr operator uint16_t() const {

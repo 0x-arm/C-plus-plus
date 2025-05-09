@@ -6,7 +6,21 @@
 #include "Memory.hpp" // module pour la gestion de la mémoire
 #include "Register.hpp" // module pour la gestion des registres
 #include "Instructions.hpp" // module pour le traitement des instructions
-#include "Saturated.hpp" // module pour appliquer la saturation sur les valeurs
+
+
+// Valeur maximale du registre
+constexpr int MAX_UPPER_LIMIT = 65535;
+
+//// Retourne la valeur saturée d'un entier
+constexpr uint16_t saturated(int n) {
+
+	// Saturation de la valeur
+    uint16_t value = std::min(std::max(n, 0), MAX_UPPER_LIMIT); 
+	
+	// Retourner la valeur saturée
+	return value;
+
+};
 
 // Exécute le programme dans le fichier texte 'program_path'
 void exec(const std::string& program_path) {
